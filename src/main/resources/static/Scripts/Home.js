@@ -6,11 +6,11 @@ function DeleteTask(id) {
             alert("Task deleted successfully!");
             location.reload();
         } else {
-            alert("Failed to delete task or task already deleted.");
+            alert("Failed to delete task or task is already deleted.");
         }
-    }).catch(error => console.error("Error:", error));
+    }).catch(error => console.error("The unexpected error occured:", error));
 }
 
 function UpdateTask(id) {
-
+    // redirecting to update task page
 }
