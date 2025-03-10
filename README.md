@@ -4,8 +4,7 @@ A **scalable REST API** for managing tasks in a To-Do list application, built us
 
 ---
 
-## 🚀 Features
-✅ **User Authentication** (JWT-based login & registration)  
+## 🚀 Features 
 ✅ **CRUD Operations for Tasks** (Create, Read, Update, Delete)  
 ✅ **Role-Based Access Control** (Users can only modify their own tasks)  
 ✅ **MySQL Database Integration** with Hibernate & JPA  
