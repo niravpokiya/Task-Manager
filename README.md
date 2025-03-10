@@ -1,6 +1,6 @@
 # 📝 Spring Boot To-Do List API
 
-A **scalable REST API** for managing tasks in a To-Do list application, built using **Spring Boot** with **JWT authentication**, **Spring Security**, **JPA**, and **MySQL**.
+A **scalable REST API** for managing tasks in a To-Do list application, built using **Spring Boot** with **Spring Security**, **JPA**, and **MySQL**.
 
 ---
 
