@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add New Task</title>
+    <link rel="stylesheet" href="Scripts/css/add-task.css">
+</head>
+<body>
+<div class="container">
+    <h2>Add New Task</h2>
+    <form action="/addTask" method="post">
+        <label>Title:</label>
+        <input type="text" name="title" placeholder="Enter Task Title" required />
+
+        <label>Description:</label>
+        <textarea name="description" placeholder="Enter Task Description" required></textarea>
+
+        <label>Status:</label>
+        <select name="status">
+            <option value="TODO">Pending</option>
+            <option value="IN PROGRESS">In Progress</option>
+            <option value="COMPLETED">Completed</option>
+        </select>
+
+        <label>Assigned User ID:</label>
+        <input type="number" name="userId" placeholder="Enter User ID" required />
+
+        <button type="submit">Add Task</button>
+    </form>
+</div>
+</body>
+</html>

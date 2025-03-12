@@ -4,8 +4,7 @@ import com.Spring.TaskManager.Entities.Task;
 import com.Spring.TaskManager.Services.TaskServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
 import java.util.List;
@@ -17,8 +16,28 @@ public class WebController {
 
     @RequestMapping("/")
     public String Home(Model model) {
-        List<Task> tasks = taskservices.GetAllTasks(2);
+        List<Task> tasks = taskservices.GetAllTasks(3);
         model.addAttribute("tasks", tasks);
         return "Home";
+    }
+    @GetMapping("/update-task/{id}")
+    public String updateTask(@PathVariable int id, Model model) {
+        Task task = taskservices.getById(id);
+        model.addAttribute("task", task);
+        return "update-task";
+    }
+    @PostMapping("/updateTask")
+    public String updateTask(@ModelAttribute Task task) {
+        taskservices.updateTask(task); // Save updates
+        return "redirect:/"; // Redirect to task list
+    }
+    @RequestMapping("/add-task")
+    public String addTask() {
+        return "add-task";
+    }
+    @PostMapping("/addTask")
+    public String addTask(@ModelAttribute Task task) {
+        taskservices.saveTask(task);
+        return "redirect:/";
     }
 }

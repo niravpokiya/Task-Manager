@@ -19,8 +19,8 @@ public class TaskController {
     }
 
     @PostMapping("/post")
-    public Task PostTask(@RequestBody Task task) {
-        return taskServices.createTask(task);
+    public List<Task> PostTask(@RequestBody List<Task> tasks) {
+        return taskServices.createAllTask(tasks);
     }
 
     @PutMapping("/update/{id}")
@@ -32,4 +32,10 @@ public class TaskController {
     public Task DeleteTask(@PathVariable int id) {
         return taskServices.DeleteTask(id);
     }
+
+    @PostMapping("/task-completed/{id}")
+    public Task taskCompleted(@PathVariable int id) {
+        return taskServices.moveToCompletedTasks(id);
+    }
+
 }

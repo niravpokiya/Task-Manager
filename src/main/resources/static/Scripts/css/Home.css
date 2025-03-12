@@ -30,11 +30,11 @@ th {
 tbody tr:nth-child(odd) {
     background: rgba(0, 0, 0, 0.05);
 }
-tbody tr:hover {
-    background: rgba(0, 0, 0, 0.1);
-    transform: scale(1.02);
-    transition: 0.3s ease-in-out;
-}
+/*tbody tr:hover {*/
+/*    background: rgba(0, 0, 0, 0.1);*/
+/*    transform: scale(1.02);*/
+/*    transition: 0.3s ease-in-out;*/
+/*}*/
 button {
     border: none;
     padding: 10px 15px;

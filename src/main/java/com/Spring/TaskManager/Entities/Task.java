@@ -2,6 +2,7 @@ package com.Spring.TaskManager.Entities;
 
 import com.Spring.TaskManager.Enums.Status;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 import java.util.Date;
 
@@ -9,10 +10,12 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@SequenceGenerator(name = "task_seq", sequenceName = "task_sequence", allocationSize = 1)
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     @Column(name = "title", nullable = false)
@@ -36,6 +39,9 @@ public class Task {
     @Column(name = "updated_time")
     private Date updatedTime;
 
+    @OneToOne(mappedBy = "task", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private CompletedTask completedTask;
+
     @PrePersist
     protected void onCreate() {
         this.createdTime = new Date();
@@ -46,4 +52,5 @@ public class Task {
     protected void onUpdate() {
         this.updatedTime = new Date();
     }
+
 }

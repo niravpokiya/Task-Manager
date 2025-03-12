@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-<!--    <link rel="stylesheet" href="Scripts/css/Home.css">-->
+    <link rel="stylesheet" href="Scripts/css/Home.css">
 </head>
 <body>
 <table border="1">
@@ -22,13 +22,14 @@
         <td th:text="${task.description}"></td>
         <td th:text="${task.status}"></td>
         <td>
-            <button th:onclick="'DeleteTask(' + ${task.id} + ')'" >Completed</button>
+            <button th:onclick="'TaskCompleted(' + ${task.id} + ')'" >Completed</button>
             <button th:onclick="'UpdateTask(' + ${task.id} + ')'" >Update</button>
             <button th:onclick="'DeleteTask(' + ${task.id} + ')'" >Delete</button>
         </td>
     </tr>
     </tbody>
     <script src="Scripts/Home.js"> </script>
+    <button th:onclick="AddTask()">Add Task</button>
 </table>
 </body>
 </html>
