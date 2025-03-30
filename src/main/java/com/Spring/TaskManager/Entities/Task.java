@@ -42,6 +42,7 @@ public class Task {
     @OneToOne(mappedBy = "task", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private CompletedTask completedTask;
 
+
     @PrePersist
     protected void onCreate() {
         this.createdTime = new Date();

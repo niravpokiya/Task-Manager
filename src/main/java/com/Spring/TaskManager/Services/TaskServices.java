@@ -81,4 +81,7 @@ public class TaskServices {
         tasks.save(newtask);
         return newtask;
     }
+    public List<Task> getTaskByUserId(int user_id) {
+        return tasks.findByUserId(user_id);
+    }
 }
