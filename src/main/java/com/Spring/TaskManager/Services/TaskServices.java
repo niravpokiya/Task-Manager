@@ -1,87 +1,120 @@
 package com.Spring.TaskManager.Services;
+
 import com.Spring.TaskManager.Entities.CompletedTask;
 import com.Spring.TaskManager.Entities.Task;
+import com.Spring.TaskManager.Entities.User;
 import com.Spring.TaskManager.Enums.Status;
 import com.Spring.TaskManager.Repositories.CompletedTaskRepository;
 import com.Spring.TaskManager.Repositories.TaskRepository;
+import com.Spring.TaskManager.Repositories.UserRepository;
+import jakarta.transaction.Transactional;
+import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class TaskServices {
+
     @Autowired
     private TaskRepository tasks;
+
     @Autowired
     private CompletedTaskRepository ctasks;
 
-    public List<Task> createAllTask(List<Task> task) {
-        return tasks.saveAll(task);
-    }
+    @Autowired
+    private UserRepository userRepository; // Added to get user details
 
-    public Task UpdateTask(int id, Task task) {
-        task.setId(id);
-        tasks.save(task);
-        return task;
-    }
-
-    public Task DeleteTask(int id) {
-        Task task_to_delete = tasks.findById(id).orElse(null);
-        tasks.deleteById(id);
-        return task_to_delete;
-    }
-
-    public List<Task> GetAllTasks(int user_id) {
-        return tasks.findByUserId(user_id);
-    }
-
-    public Task moveToCompletedTasks(int id) {
-        Task task_to_move = tasks.findById(id).orElse(null);
-        if (task_to_move == null) {
-            throw new RuntimeException("Task not found!");
+    // ✅ Save tasks with user association
+    public Task saveTask(Task task) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+        if(user == null) {
+            throw new RuntimeException("User not found");
         }
+
+        task.setUser(user); // Associate task with the user
+        task.setCreatedTime(new Date());
+        task.setUpdatedTime(new Date());
+
+        return tasks.save(task);
+    }
+
+    // ✅ Update only necessary fields of a task
+    @Transactional
+    public Task updateTask(int id, Task newtask) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userRepository.findByUsername(username);
+        if(user == null) {
+            throw new RuntimeException("User not found !");
+        }
+        Task task = tasks.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+
+        if (task.getUser().getId() != user.getId()) {
+            throw new RuntimeException("Unauthorized: You cannot update this task");
+        }
+
+        task.setTitle(newtask.getTitle());
+        task.setDescription(newtask.getDescription());
+        task.setStatus(newtask.getStatus());
+        task.setUpdatedTime(new Date());
+
+        return tasks.save(task);
+    }
+
+    // ✅ Fetch all tasks for a specific user
+    public List<Task> getTasksByUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userRepository.findByUsername(username);
+
+        if(user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        return tasks.findByUser(user);
+    }
+
+    // ✅ Move a task to completed tasks
+    public Task moveToCompletedTasks(int id) {
+        Task task_to_move = tasks.findById(id).orElseThrow(() -> new RuntimeException("Task not found"));
+
         task_to_move.setStatus(Status.COMPLETED);
         CompletedTask completed = new CompletedTask(task_to_move);
+        ctasks.save(completed);
 
-        try {
-            ctasks.save(completed);
-        }
-        catch (Exception e) {
-            System.out.println("Exception Occured  ------------------------");
-            System.out.println(e.getMessage());
-        }
-        return task_to_move;
+        return tasks.save(task_to_move);
     }
-    public Task getById(int id) {
-        return tasks.findById(id).orElse(null);
-    }
-    public Task updateTask(Task task) {
-        Task existingTask = tasks.findById(task.getId()).orElse(null);
 
-        if (existingTask != null) {
-            existingTask.setTitle(task.getTitle());
-            existingTask.setDescription(task.getDescription());
-            existingTask.setStatus(task.getStatus());
-            existingTask.setUpdatedTime(new Date());
+    // ✅ Delete a task safely
+    @Transactional
+    public Task deleteTask(int id) {
 
-            tasks.save(existingTask); // Save updated task
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userRepository.findByUsername(username);
+        if(user == null) {
+            throw new RuntimeException("User not found");
         }
-
+        Task task = tasks.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+        if(task == null) {
+            throw new RuntimeException("Task not found");
+        }
+        if(user.getId() != task.getUser().getId()) {
+            throw new RuntimeException("You cannot delete this task.");
+        }
+        tasks.delete(task);
         return task;
     }
-    public Task saveTask(Task task) {
-        Task newtask = new Task();
-        newtask.setTitle(task.getTitle());
-        newtask.setDescription(task.getDescription());
-        newtask.setStatus(task.getStatus());
-        newtask.setUserId(3);
 
-        tasks.save(newtask);
-        return newtask;
-    }
-    public List<Task> getTaskByUserId(int user_id) {
-        return tasks.findByUserId(user_id);
-    }
 }

@@ -32,7 +32,7 @@ function UpdateTask(id) {
 }
 
 function AddTask() {
-    fetch("http://localhost:8080/add-task", {
+    fetch("http://localhost:8080/user/create-task", {
         method:"POST"
     }).then(response => {
         if(response.ok)  {

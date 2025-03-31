@@ -36,8 +36,8 @@ public class SecurityConfig {
                 configurer
                         .requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN") // Only ADMIN can access /admin/**
                         .requestMatchers("/auth/**").permitAll() // Authentication endpoints (login, register, etc.)
-                        .requestMatchers("/tasks/**").authenticated() // Users must be logged in to access tasks
-                        .anyRequest().permitAll() // Everything else is public
+                        .requestMatchers("/user/**").authenticated()
+                        .anyRequest().authenticated()
         );
         http   .csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(Customizer.withDefaults());

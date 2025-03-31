@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import java.util.Collections;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -56,7 +55,11 @@ public class UserService implements UserDetailsService {
                 List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole())) // 🔹 Convert role (USER → ROLE_USER)
         );
     }
+
     public User FindUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+    public List<User> usersList() {
+        return userRepository.findAll();
     }
 }

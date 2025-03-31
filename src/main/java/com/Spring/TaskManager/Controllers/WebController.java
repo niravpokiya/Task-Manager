@@ -16,28 +16,28 @@ public class WebController {
 
     @RequestMapping("/")
     public String Home(Model model) {
-        List<Task> tasks = taskservices.GetAllTasks(3);
+        List<Task> tasks = taskservices.getTasksByUser();
         model.addAttribute("tasks", tasks);
         return "Home";
     }
-    @GetMapping("/update-task/{id}")
-    public String updateTask(@PathVariable int id, Model model) {
-        Task task = taskservices.getById(id);
-        model.addAttribute("task", task);
-        return "update-task";
-    }
-    @PostMapping("/updateTask")
-    public String updateTask(@ModelAttribute Task task) {
-        taskservices.updateTask(task); // Save updates
-        return "redirect:/"; // Redirect to task list
-    }
-    @RequestMapping("/add-task")
-    public String addTask() {
-        return "add-task";
-    }
-    @PostMapping("/addTask")
-    public String addTask(@ModelAttribute Task task) {
-        taskservices.saveTask(task);
-        return "redirect:/";
-    }
+//    @GetMapping("/update-task/{id}")
+//    public String updateTask(@PathVariable int id, Model model) {
+//        Task task = taskservices.getById(id);
+//        model.addAttribute("task", task);
+//        return "update-task";
+//    }
+//    @PostMapping("/updateTask")
+//    public String updateTask(@ModelAttribute Task task) {
+//        taskservices.updateTask(task); // Save updates
+//        return "redirect:/"; // Redirect to task list
+//    }
+//    @RequestMapping("/add-task")
+//    public String addTask() {
+//        return "add-task";
+//    }
+//    @PostMapping("/addTask")
+//    public String addTask(@ModelAttribute Task task) {
+//        taskservices.saveTask(task);
+//        return "redirect:/";
+//    }
 }
